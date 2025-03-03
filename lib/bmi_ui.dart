@@ -1,4 +1,4 @@
-/*
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +10,24 @@ class BmiState extends State<BmiPage>{
 
   TextEditingController cmController = TextEditingController();
   TextEditingController kgController = TextEditingController();
+
+  bool checker = false;
+  bool checker2 = false;
+  void trigger() {
+    checker = cmController.text.isEmpty;
+   setState(() {
+
+   });
+  }
+  void trigger2(){
+    checker2 = kgController.text.isEmpty;
+   setState(() {
+
+   });
+  }
+
+
+
   
   num bmi=0;
   String fit="";
@@ -35,7 +53,9 @@ class BmiState extends State<BmiPage>{
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(height: 10,),
-              Container(child: Image.asset("$image",)),
+              Container(
+                  height: 380,
+                  child: Image.asset("$image",)),
               SizedBox(height: 10,),
               bmi!=0 ?Text("BMI: ${bmi.toStringAsFixed(1)}",style: TextStyle(fontFamily: "PoppinsBold",fontSize:25,color:getcolor())):Container(),
               fit!="" ?Text("$fit",style: TextStyle(fontFamily: "PoppinsBold",fontSize:30,color:getcolor()),):Container(),
@@ -48,20 +68,27 @@ class BmiState extends State<BmiPage>{
                   cursorColor: Colors.black,
                   style: TextStyle(color: Colors.black,fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize: 17),
                   decoration: InputDecoration(
-                    label: Text("Weight",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize:16,color: Colors.grey)),
+                    label: Text("Weight",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize:16,color: checker2 ? Colors.red : Colors.grey)),
                     hintText: "Enter in KG",
                     hintStyle: TextStyle(color: Colors.grey,fontFamily: "Poppins",fontSize: 16),
+                   errorText: checker2 ? "Please Enter the value" : null,
+                      errorStyle: TextStyle(color: Colors.red),
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red,width: 1),borderRadius: BorderRadius.circular(10)),
+                      focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.amber,width: 2),borderRadius: BorderRadius.circular(10)),
 
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber,width: 2),
+                      borderSide: BorderSide(color: checker2 ? Colors.red :Colors.amber,width: 2),
                       borderRadius: BorderRadius.circular(10)
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.grey,width: 1.5)
+                      borderSide: BorderSide(color:checker2 ? Colors.red : Colors.grey,width: 1.5)
                     ),
                   ),
-
+                  /// Disable long-press zoom effect
+                  magnifierConfiguration: TextMagnifierConfiguration.disabled,
+                  /// Disable copy paste feature and long-press
+                  contextMenuBuilder: (_,__)=>Container(),
                 ),
               ),
               SizedBox(height: 20,),
@@ -73,25 +100,46 @@ class BmiState extends State<BmiPage>{
                   cursorColor: Colors.black,
                   style: TextStyle(color: Colors.black,fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize: 17),
                   decoration: InputDecoration(
-                    label: Text("Height",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize:16,color: Colors.grey)),
+                    label: Text("Height",style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,fontSize:16,color: checker ? Colors.red : Colors.grey)),
                     hintText: "Enter in CM",
+                    errorText: checker ? "Please Enter the value" : null,
+                    errorStyle: TextStyle(color: Colors.red),
+                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red,width: 1),borderRadius: BorderRadius.circular(10)),
+                    focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.amber,width: 2),borderRadius: BorderRadius.circular(10)),
                     hintStyle: TextStyle(color: Colors.grey,fontFamily: "Poppins",fontSize: 16),
 
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber,width: 2),
+                      borderSide: BorderSide(color: checker ? Colors.red : Colors.amber,width: 2),
                       borderRadius: BorderRadius.circular(10)
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.grey,width: 1.5)
+                      borderSide: BorderSide(color: checker ? Colors.red : Colors.grey,width: 1.5)
                     ),
                   ),
-
+                  /// Disable long-press zoom effect
+                  magnifierConfiguration: TextMagnifierConfiguration.disabled,
+                  /// Disable copy paste feature and long-press
+                  contextMenuBuilder: (_,__)=>Container(),
                 ),
               ),
               SizedBox(height: 20,),
               GestureDetector(
                 onTap: (){
+                  if(cmController.text.isEmpty){
+                    trigger();
+                  }else{
+                    trigger();
+                    checker=false;
+                  }
+                  if(kgController.text.isEmpty){
+                    trigger2();
+                  }else{
+                    trigger2();
+                    checker2=false;
+                  }
+
+
                   if (kgController.text.isNotEmpty &&
                       cmController.text.isNotEmpty) {
                     num kg = double.parse(kgController.text.toString());
@@ -109,14 +157,20 @@ class BmiState extends State<BmiPage>{
                       fit = "Overweight";
                       image="asset/image/overfit.png";
                     }
+                    setState(() {
+
+                    });
+
                   }else{
                     bmi=0;
                     fit="";
                     image="asset/image/banner-bmi.png";
-                  }
-                  setState(() {
 
-                  });
+                    setState(() {
+
+                    });
+
+                  }
 
                 },
                 child: Container(
@@ -152,196 +206,6 @@ class BmiState extends State<BmiPage>{
       return Colors.red;
     }else{
       return Colors.black;
-    }
-  }
-}*/
-
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-class BmiPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _BmiState();
-}
-
-class _BmiState extends State<BmiPage> {
-  final TextEditingController cmController = TextEditingController();
-  final TextEditingController kgController = TextEditingController();
-
-  num bmi = 0;
-  String bmiCategory = "";
-  String image = "asset/image/banner-bmi.png";
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.amber,
-        title: Row(
-          children: [
-            Text('BMI',
-                style: TextStyle(
-                    fontFamily: "PoppinsBold",
-                    fontSize: 25,
-                    color: Colors.black)),
-            Text(' Calculator',
-                style: TextStyle(
-                    fontFamily: "Poppins", fontSize: 20, color: Colors.black)),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const SizedBox(height: 10),
-              Image.asset(image),
-              const SizedBox(height: 10),
-              if (bmi != 0)
-                Text(
-                  "BMI: ${bmi.toStringAsFixed(1)}",
-                  style: TextStyle(
-                      fontFamily: "PoppinsBold",
-                      fontSize: 25,
-                      color: _getColor()),
-                ),
-              if (bmiCategory.isNotEmpty)
-                Text(
-                  bmiCategory,
-                  style: TextStyle(
-                      fontFamily: "PoppinsBold",
-                      fontSize: 30,
-                      color: _getColor()),
-                ),
-              const SizedBox(height: 20),
-              _buildTextField(
-                  controller: kgController,
-                  label: "Weight",
-                  hint: "Enter in KG"),
-              const SizedBox(height: 20),
-              _buildTextField(
-                  controller: cmController,
-                  label: "Height",
-                  hint: "Enter in CM"),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: _calculateBmi,
-                child: Container(
-                  height: 60,
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                          offset: Offset(1.5, 1.5),
-                          color: Colors.black,
-                        )
-                      ]),
-                  child: Center(
-                      child: Text('Calculate',
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black))),
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-      {required TextEditingController controller,
-        required String label,
-        required String hint}) {
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      cursorColor: Colors.black,
-      style: const TextStyle(
-          color: Colors.black,
-          fontFamily: "Poppins",
-          fontWeight: FontWeight.bold,
-          fontSize: 17),
-      decoration: InputDecoration(
-        label: Text(label,
-            style: const TextStyle(
-                fontFamily: "Poppins",
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.grey)),
-        hintText: hint,
-        hintStyle: const TextStyle(
-            color: Colors.grey, fontFamily: "Poppins", fontSize: 16),
-        focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.amber, width: 2),
-            borderRadius: BorderRadius.circular(10)),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.grey, width: 1.5)),
-      ),
-    );
-  }
-
-  void _calculateBmi() {
-    if (kgController.text.isNotEmpty && cmController.text.isNotEmpty) {
-      try {
-        final num kg = double.parse(kgController.text);
-        final num cm = double.parse(cmController.text);
-
-        if (kg > 0 && cm > 0) {
-          final num height = cm / 100;
-          setState(() {
-            bmi = kg / (height * height);
-            if (bmi < 18.5) {
-              bmiCategory = "Underweight";
-              image = "asset/image/unfit.png";
-            } else if (bmi < 24.9) {
-              bmiCategory = "Normal";
-              image = "asset/image/fit.png";
-            } else {
-              bmiCategory = "Overweight";
-              image = "asset/image/overfit.png";
-            }
-          });
-        }
-      } catch (e) {
-        // Handle parsing errors
-        setState(() {
-          bmi = 0;
-          bmiCategory = "Invalid input";
-          image = "asset/image/banner-bmi.png";
-        });
-      }
-    } else {
-      setState(() {
-        bmi = 0;
-        bmiCategory = "";
-        image = "asset/image/banner-bmi.png";
-      });
-    }
-  }
-
-  Color _getColor() {
-    switch (bmiCategory) {
-      case "Normal":
-        return Colors.green;
-      case "Underweight":
-        return Colors.orange;
-      case "Overweight":
-        return Colors.red;
-      default:
-        return Colors.black;
     }
   }
 }
